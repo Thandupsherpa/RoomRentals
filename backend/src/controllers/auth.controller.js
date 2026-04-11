@@ -41,34 +41,47 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { firstName, middleName, lastName, email, password, role } = req.body;
 
-    
+    // Validation
+    if (!firstName) {
+      return res.status(400).json({ message: "First name is required" });
+    }
+    if (!lastName) {
+      return res.status(400).json({ message: "Last name is required" });
+    }
+
+    // Check if user already exists (by email only, since names can repeat)
     const isAlreadyRegistered = await userModel.findOne({
-      $or: [
-        { username }, 
-        { email }
-    ]
+      email: email
     });
 
     if (isAlreadyRegistered) {
       return res.status(409).json({
-        message: "Username or Email already exists"
+        message: "Email already exists"
       });
     }
 
-    
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-  
+    // Create fullName for display purposes (optional)
+    const fullName = middleName 
+      ? `${firstName} ${middleName} ${lastName}`
+      : `${firstName} ${lastName}`;
+
+    // Create user
     const user = await userModel.create({
-      username,
+      firstName,
+      middleName: middleName || null, 
+      lastName,
+      fullName, 
       email,
       password: hashedPassword,
       role: role || "tenant"
     });
 
-    
+   
     const token = jwt.sign(
       {
         id: user._id,
@@ -82,7 +95,10 @@ export const register = async (req, res) => {
       message: "User registered successfully",
       user: {
         id: user._id,
-        username: user.username,
+        firstName: user.firstName,
+        middleName: user.middleName,
+        lastName: user.lastName,
+        fullName: user.fullName,  
         email: user.email,
         role: user.role
       },

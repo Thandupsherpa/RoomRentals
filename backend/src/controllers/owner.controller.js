@@ -1,24 +1,52 @@
-// import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
+import roomModel from "../models/room.model.js";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 
-// export const uploadRoomImages = async(req,res)=>{
-//     try {
-//         const files = req.files;
+export const addRoom = async (req, res) => {
+  try {
+    const ownerId = req.user.id;
 
-//         if(!files || files.length === 0){
-//             return res.status(400).json({message:"No images uploaded"})
-//         }
-//         let imageUrls = [];
+    const {
+      title,
+      description,
+      price,
+      location,
+      facilities,
+      isAvailable,
+      allowedGender
+    } = req.body;
 
-//         for(let file of files){
-//             const result =  await uploadToCloudinary(file.buffer);
-//             imageUrls.push(result.secure_url);
-//         }
-//         res.json({
-//             message:"Image uploaded successfully",
-//             images:imageUrls
-//         })
+    const files = req.files;
 
-//     } catch (err) {
-//         res.status(500).json({message:err.message})
-//     }
-// }
+    let imageUrls = [];
+
+    // ✅ upload each image to cloudinary
+    if (files && files.length > 0) {
+      for (let file of files) {
+        const result = await uploadToCloudinary(file.buffer);
+        imageUrls.push(result.secure_url);
+      }
+    }
+
+    const room = await roomModel.create({
+      owner: ownerId,
+      title,
+      description,
+      price,
+      location,
+      images: imageUrls, // ✅ now correct
+      facilities: facilities ? JSON.parse(facilities) : [],
+      isAvailable,
+      allowedGender: allowedGender
+        ? JSON.parse(allowedGender)
+        : ["male", "female", "other"]
+    });
+
+    res.status(201).json({
+      message: "Room created successfully",
+      room
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
