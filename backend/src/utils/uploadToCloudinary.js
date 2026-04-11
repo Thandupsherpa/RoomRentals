@@ -7,7 +7,7 @@ export const uploadToCloudinary = async (fileBuffer)=>{
                 folder:"room-images"
             },
             (error,result)=>{
-                if(error) return result(error);
+                if(error) return reject(error);
                 resolve(result)
             }
         ).end(fileBuffer)
