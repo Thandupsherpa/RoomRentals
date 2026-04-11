@@ -13,6 +13,9 @@ import {
     updateBookingStatus
 } from "../controllers/owner.controller.js"
 
+import { upload } from "../middlewares/upload.middleware.js";
+import {uploadRoomImages} from '../controllers/owner.controller.js'
+
 const ownerRouter = Router();
 
 ownerRouter.use(verifyToken);
@@ -24,5 +27,10 @@ ownerRouter.put('/rooms/:id',updateRoom)
 ownerRouter.delete('/rooms/:id',deleteRoom)
 ownerRouter.get('/bookings',getRoomBookings)
 ownerRouter.put('/bookings/:id',updateBookingStatus)
-
+ownerRouter.post('/upload-images',
+    verifyToken,
+    authorizeRoles("owner"),
+    upload.array("images",5),
+    uploadRoomImages
+)
 export default ownerRouter
