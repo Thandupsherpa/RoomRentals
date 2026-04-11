@@ -2,6 +2,7 @@ import userModel from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
+import Blacklist from "../models/blacklist.model.js";
 
 export const login = async (req, res) => {
     try {
@@ -86,6 +87,25 @@ export const register = async (req, res) => {
         role: user.role
       },
       token
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+export const logout = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+      return res.status(400).json({ message: "No token provided" });
+    }
+
+    await Blacklist.create({ token });
+
+    res.json({
+      message: "Logged out successfully"
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
