@@ -24,7 +24,7 @@ export const login = async (req, res) => {
         
         const token = jwt.sign(
             { id: user._id, role: user.role },
-            process.env.JWT_SECRET,
+            config.JWT_SECRET,
             { expiresIn: "1d" }
         );
 
@@ -78,7 +78,7 @@ export const register = async (req, res) => {
       fullName, 
       email,
       password: hashedPassword,
-      role: role || "tenant"
+      role: role || "TENANT"
     });
 
    

@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     role:{
         type:String,
         enum:["TENANT","OWNER"],
-        default:"tenant"
+        default:"TENANT"
     },
 
 

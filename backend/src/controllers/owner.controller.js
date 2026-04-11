@@ -19,7 +19,7 @@ export const addRoom = async (req, res) => {
 
     let imageUrls = [];
 
-    // ✅ upload each image to cloudinary
+    
     if (files && files.length > 0) {
       for (let file of files) {
         const result = await uploadToCloudinary(file.buffer);
@@ -38,7 +38,7 @@ export const addRoom = async (req, res) => {
       isAvailable,
       allowedGender: allowedGender
         ? JSON.parse(allowedGender)
-        : ["male", "female", "other"]
+        : ["MALE", "FEMALE", "OTHERS"]
     });
 
     res.status(201).json({

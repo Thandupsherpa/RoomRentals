@@ -16,15 +16,11 @@ ownerRouter.use(authorizeRoles("OWNER"));
 
 ownerRouter.post(
     '/rooms',
-    verifyToken,
-    authorizeRoles("OWNER"),
     upload.array("images", 5),
     addRoom
 );
 
 ownerRouter.post('/upload-images',
-    verifyToken,
-    authorizeRoles("OWNER"),
     upload.array("images", 5),
     uploadImages
 );
