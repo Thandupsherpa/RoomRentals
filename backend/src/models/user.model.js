@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
         enum:["tenant","owner"],
         default:"tenant"
     },
+    
 
 },
 {timestamps:true})
