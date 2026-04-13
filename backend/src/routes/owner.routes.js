@@ -4,7 +4,8 @@ import {
     authorizeRoles
 } from "../middlewares/auth.middleware.js";
 import {
-    addRoom
+    addRoom,
+    getOwnerProfile
 } from "../controllers/owner.controller.js";
 import { upload } from "../middlewares/upload.middleware.js";
 import { uploadImages } from '../controllers/upload.controller.js';
@@ -25,4 +26,5 @@ ownerRouter.post('/upload-images',
     uploadImages
 );
 
+ownerRouter.get('/profile',getOwnerProfile)
 export default ownerRouter; 
