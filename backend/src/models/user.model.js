@@ -27,6 +27,9 @@ const userSchema = new mongoose.Schema({
         required:[true,"Password is required"],
        
     },
+    profilePic:{
+        type:String
+    },
     role:{
         type:String,
         enum:["TENANT","OWNER"],
