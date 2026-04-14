@@ -73,3 +73,48 @@ export const getOwnerProfile = async (req,res) =>{
         res.status(500).json({message:err.message})
     }
 }
+export const deleteRoom = async (req, res) => {
+  try {
+    const ownerId = req.user.id;
+    const roomId = req.params.id;
+
+    const room = await roomModel.findOneAndDelete({
+      _id: roomId,
+      owner: ownerId
+    });
+
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    res.json({ message: "Room deleted successfully" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const updateRoom = async (req, res) => {
+  try {
+    const ownerId = req.user.id;
+    const roomId = req.params.id;
+
+    const updatedRoom = await roomModel.findOneAndUpdate(
+      { _id: roomId, owner: ownerId },
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedRoom) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    res.json({
+      message: "Room updated successfully",
+      room: updatedRoom
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

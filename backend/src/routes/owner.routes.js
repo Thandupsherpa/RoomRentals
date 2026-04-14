@@ -5,7 +5,9 @@ import {
 } from "../middlewares/auth.middleware.js";
 import {
     addRoom,
-    getOwnerProfile
+    getOwnerProfile,
+    deleteRoom,
+    updateRoom
 } from "../controllers/owner.controller.js";
 import { upload } from "../middlewares/upload.middleware.js";
 import { uploadImages } from '../controllers/upload.controller.js';
@@ -27,4 +29,9 @@ ownerRouter.post('/upload-images',
 );
 
 ownerRouter.get('/profile',getOwnerProfile)
+
+ownerRouter.delete("/rooms/:id", deleteRoom);
+
+ownerRouter.put("/rooms/:id", updateRoom);
+
 export default ownerRouter; 
